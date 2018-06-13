@@ -97,7 +97,7 @@ def get_order_list_first(this_symbol, this_states):
                 print('发现未成交订单，尝试先取消委托订单')
                 cancel_order_action(order_item['id'])
             elif this_states == filled:
-                now_price = get_ticker(symbol)
+                now_price = float(get_ticker(symbol))
                 if order_item['side'] == 'buy':
                     print('尝试卖出')
                     if now_price >= order_price + zhisun * order_price:
