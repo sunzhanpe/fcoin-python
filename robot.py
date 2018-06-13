@@ -140,7 +140,9 @@ def check_order_state(this_order_id):
 # 买操作
 def buy_action(this_symbol, this_price, this_amount):
     buy_result = fcoin.buy(this_symbol, this_price, this_amount)
-    print(buy_result)
+    if buy_result is None:
+        print("没有买到或者余额不足")
+        return True
     buy_order_id = buy_result['data']
     if buy_order_id:
         print('买单', this_price, '价格成功委托', '订单ID', buy_order_id)
