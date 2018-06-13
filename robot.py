@@ -111,7 +111,7 @@ def get_order_list_first(this_symbol, this_states):
                             sell_action(symbol, now_price, sell_amount)
                     else:
                         print('卖出损失较大，不操作')
-                        if get_balance_action(get_symbol_type(this_symbol)) * now_price <= 0.3 * 243:
+                        if get_balance_action(get_symbol_type(this_symbol)) * now_price <= 0.3 * 243.0:
                             print('仓位不足3层，继续尝试买入')
                             buy_action(symbol, now_price, buy_amount)
                 elif order_item['side'] == 'sell':
