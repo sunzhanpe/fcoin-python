@@ -17,6 +17,10 @@ buy_amount = Config['buy_amount']
 sell_amount = Config['sell_amount']
 # 交易对
 symbol = Config['symbol']
+#止盈
+zhiying = Config['zhiying']
+#止损
+zhisun = Config['zhisun']
 
 
 # 初始化
@@ -96,8 +100,8 @@ def get_order_list_first(this_symbol, this_states):
                 now_price = get_ticker(symbol)
                 if order_item['side'] == 'buy':
                     print('尝试卖出')
-                    if now_price >= order_price:
-                        print('现价大于等于上一笔买入价，尝试卖出')
+                    if now_price >= order_price + zhisun * order_price:
+                        print('卖出损失小于赚的手续费，尝试卖出')
                         current_amount = get_balance_action(get_symbol_type(this_symbol))
                         if Config['all_sell'] or sell_amount > current_amount:
                             # 卖出当前所有可用余额
@@ -106,17 +110,17 @@ def get_order_list_first(this_symbol, this_states):
                             # 卖出固定量
                             sell_action(symbol, now_price, sell_amount)
                     else:
-                        print('现价小于上一笔买入价，不操作')
+                        print('卖出损失较大，不操作')
                 elif order_item['side'] == 'sell':
                     # 这里只判断卖出价格高于买入价格
                     print('尝试买入')
                     # 直接买入
                     # now_price <= order_price or
-                    if True:
-                        print('买入现价小于等于上一笔卖出价，尝试买入')
+                    if now_price <= order_price + zhiying * order_price:
+                        print('买入损失小于赚的手续费，尝试买入')
                         buy_action(symbol, now_price, buy_amount)
                     else:
-                        print('买入现价大于上一笔卖出价，不操作')
+                        print('买入损失较大，不操作')
     else:
         if this_states == submitted:
             print('没有发现未成交订单')
@@ -136,9 +140,7 @@ def check_order_state(this_order_id):
 # 买操作
 def buy_action(this_symbol, this_price, this_amount):
     buy_result = fcoin.buy(this_symbol, this_price, this_amount)
-    if buy_result is None:
-        print("没有买到或者余额不足")
-        return True
+    print(buy_result)
     buy_order_id = buy_result['data']
     if buy_order_id:
         print('买单', this_price, '价格成功委托', '订单ID', buy_order_id)
@@ -182,8 +184,8 @@ def get_ticker(this_symbol):
 
 def robot():
     # 账户余额
-    get_balance_action('btc')
-    get_balance_action('usdt')
+    # get_balance_action('btc')
+    # get_balance_action('usdt')
     # 获取委托订单列表
     get_order_list_first(symbol, submitted)
 
