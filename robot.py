@@ -103,7 +103,7 @@ def get_order_list_first(this_symbol, this_states):
                     if now_price >= order_price + zhisun * order_price:
                         print('卖出损失小于赚的手续费，尝试卖出')
                         current_amount = get_balance_action(get_symbol_type(this_symbol))
-                        if Config['all_sell'] or sell_amount > current_amount:
+                        if sell_amount > current_amount:
                             # 卖出当前所有可用余额
                             sell_action(symbol, now_price, current_amount)
                         else:
