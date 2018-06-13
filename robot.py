@@ -9,7 +9,7 @@ from config import Config
 
 # 已成交
 filled = 'filled'
-# 未成交
+# 已提交（未成交）
 submitted = 'submitted'
 # 买金额
 buy_amount = Config['buy_amount']
@@ -111,6 +111,9 @@ def get_order_list_first(this_symbol, this_states):
                             sell_action(symbol, now_price, sell_amount)
                     else:
                         print('卖出损失较大，不操作')
+                        if get_balance_action(get_symbol_type(this_symbol)) * now_price <= 0.3 * 243:
+                            print('仓位不足3层，继续尝试买入')
+                            buy_action(symbol, now_price, buy_amount)
                 elif order_item['side'] == 'sell':
                     # 这里只判断卖出价格高于买入价格
                     print('尝试买入')
